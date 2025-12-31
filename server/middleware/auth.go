@@ -47,8 +47,11 @@ func AuthMiddleware(clientID string) gin.HandlerFunc {
 		if payload == nil {
 			return
 		}
-		c.Set("userID", payload.Subject)
-		slog.Debug("Auth Middleware", "userID", payload.Subject)
+		c.Set("email", payload.Claims["email"])
+		c.Set("image", payload.Claims["picture"])
+		slog.Info("Auth Middleware", "email", payload.Claims["email"])
+		slog.Info("Auth Middleware", "image", payload.Claims["picture"])
+
 		c.Next()
 	}
 }

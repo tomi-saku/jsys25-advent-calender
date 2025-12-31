@@ -4,7 +4,9 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"time"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	middlewares "github.com/tomi-saku/jsys25-advent-calender/middleware"
 	"github.com/tomi-saku/jsys25-advent-calender/models"
@@ -14,6 +16,22 @@ func main() {
 	fmt.Println("Application Initializing...")
 
 	r := gin.Default()
+
+	r.Use(cors.New(cors.Config{
+		AllowOrigins: []string{"http://localhost:5173"},
+		AllowMethods: []string{
+			"GET",
+			"POST",
+			"OPTIONS",
+			"DELETE",
+		},
+		AllowHeaders: []string{
+			"Content-Type",
+			"Authorization",
+		},
+		AllowCredentials: true,
+		MaxAge:           12 * time.Hour,
+	}))
 
 	r.GET("/health", getHealth)
 
@@ -35,9 +53,11 @@ func getHealth(c *gin.Context) {
 }
 
 func getEmailAddress(c *gin.Context) {
-	userId := c.GetString("userID")
-	res := models.UserId{
-		UserId: userId,
+	email := c.GetString("email")
+	image := c.GetString("image")
+	res := models.User{
+		Email: email,
+		Image: image,
 	}
 	c.IndentedJSON(http.StatusOK, res)
 }
