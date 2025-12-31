@@ -1,11 +1,11 @@
 import { GoogleLogin, type CredentialResponse } from "@react-oauth/google";
+import { type UserData } from "../App";
 
-type User = {
-  email: string;
-  image: string;
+type GoogleLoginButtonProps = {
+  handleValueChange: (data: UserData) => void;
 };
 
-export default function GoogleLoginButton() {
+const GoogleLoginButton = ({ handleValueChange }: GoogleLoginButtonProps) => {
   const handleLoginSuccess = (credentialResponse: CredentialResponse) => {
     //console.log(credentialResponse);
     fetch("http://localhost:8080/authorization", {
@@ -16,9 +16,10 @@ export default function GoogleLoginButton() {
       },
     })
       .then((response) => response.json())
-      .then((data: User) => {
+      .then((data: UserData) => {
         console.log("Email adress: ", data.email);
         console.log("Image: ", data.image);
+        handleValueChange(data);
       })
       .catch((error) => {
         console.log("Error: ", error);
@@ -32,4 +33,6 @@ export default function GoogleLoginButton() {
   return (
     <GoogleLogin onSuccess={handleLoginSuccess} onError={handleLoginError} />
   );
-}
+};
+
+export default GoogleLoginButton;
