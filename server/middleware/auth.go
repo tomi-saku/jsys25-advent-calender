@@ -20,6 +20,7 @@ func verifyTokenAndGetPayload(c *gin.Context, clientID string) *idtoken.Payload 
 		c.AbortWithStatusJSON(401, errRes)
 		return nil
 	}
+	//Bearerトークンを削除
 	if !strings.HasPrefix(AuthHeader, bearerPrefix) {
 		errRes := models.Error{
 			Message: "Authorization header must be Bearer token",
@@ -29,6 +30,7 @@ func verifyTokenAndGetPayload(c *gin.Context, clientID string) *idtoken.Payload 
 	}
 	token := strings.TrimPrefix(AuthHeader, bearerPrefix)
 	slog.Debug("Auth Utility", "Token", token)
+	// JWTを検証し、ペイロードを変数に格納
 	payload, err := idtoken.Validate(c.Request.Context(), token, clientID)
 	if err != nil {
 		slog.Debug("failed to Authorize", "error", err)

@@ -17,6 +17,7 @@ func main() {
 
 	r := gin.Default()
 
+	// CORSポリシーを満たすようにミドルウェアを設定
 	r.Use(cors.New(cors.Config{
 		AllowOrigins: []string{"http://localhost:5173"},
 		AllowMethods: []string{
@@ -35,6 +36,7 @@ func main() {
 
 	r.GET("/health", getHealth)
 
+	// 特定のエンドポイントにミドルウェアを設定
 	authorizedRoutes := r.Group("/authorization")
 	authorizedRoutes.Use(middlewares.AuthMiddleware(os.Getenv("GOOGLE_CLIENT_ID")))
 	{

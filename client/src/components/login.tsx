@@ -6,8 +6,9 @@ type GoogleLoginButtonProps = {
 };
 
 const GoogleLoginButton = ({ handleValueChange }: GoogleLoginButtonProps) => {
+  // ログイン成功時の処理
   const handleLoginSuccess = (credentialResponse: CredentialResponse) => {
-    //console.log(credentialResponse);
+    // バックエンドへのリクエスト
     fetch("http://localhost:8080/authorization", {
       method: "GET",
       headers: {
@@ -19,13 +20,14 @@ const GoogleLoginButton = ({ handleValueChange }: GoogleLoginButtonProps) => {
       .then((data: UserData) => {
         console.log("Email adress: ", data.email);
         console.log("Image: ", data.image);
+        //親要素へユーザーデータを渡す
         handleValueChange(data);
       })
       .catch((error) => {
         console.log("Error: ", error);
       });
   };
-
+  // ログイン失敗時の処理
   const handleLoginError = () => {
     console.log("Login Failed");
   };
